@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <style>
+            .workspace{
+                width:300px;
+                position:absolute;
+                background:gray;
+            }
+            .magnifier{	
+                border:2px solid white;
+                position:absolute;
+                height:180px;
+                width:180px;
+                display:none;
+                background-repeat:no-repeat;
+                background-color:#fff;
+                cursor:url('img/invisible.cur'),default;	
+                -moz-box-shadow:0 0 5px #777, 0 0 10px #aaa inset;
+                -webkit-box-shadow:0 0 5px #777;
+                box-shadow:0 0 5px #777, 0 0 10px #aaa inset;
+                -moz-border-radius:90px;
+                -webkit-border-radius:90px;
+                border-radius:90px;
+            }
+
+            .magnifier.cursor_compatible{
+                cursor:url('img/invisible_chrome.cur'),default;
+            }
+        </style>
+    </head>
+    <body>
+
+
+        <div style="margin:100px;">
+            <a class="workspace" href="../upload/1349_790/crenjal_com-05-01-1395-05-09-53-Capture1.JPG">
+                <img src="../upload/1349_790/crenjal_com-05-01-1395-05-09-53-Capture1.JPG" style="width:300px;" />
+            </a>
+        </div>
+
+
+        <script src="../js/jquery.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+        <script>
+            /**
+             * Copyright (c) 2014 Mark Li
+             * http://git.markli.net/
+             * Code licensed under  the terms of the MIT License:
+             * http://git.markli.net/license.txt
+             * 
+             * @version 1.0
+             * @description Magnifier Effect, based on jQuery
+             */
+            (function (window, document, $) {
+                "use strict";
+                $.fn.mkMagnifier = function (cfg) {
+                    var $config = {width: 300, height: 460, ratio: 1.65, magnifier_radius: 90};
+                    $.extend($config, cfg);
+                    var $pos_x_ratio = $config.ratio - 2 * $config.magnifier_radius / $config.width,
+                            $pos_y_ratio = $config.ratio - 2 * $config.magnifier_radius / $config.height;
+                    var hasTouch = 'ontouchstart' in window;
+                    this.each(function () {
+                        var elem = $(this);
+                        var magnifier = $('<div class="magnifier" style="background-image:url(\'' + elem.attr("href") + '\')"></div>');
+                        elem.append(magnifier);
+                        if (!hasTouch) { /* mouse event */
+                            if ($.browser.webkit) {
+                                magnifier.addClass('cursor_compatible');
+                            }
+                            elem.mousemove(function (e) {
+                                var left = e.pageX - elem.offset().left,
+                                        top = e.pageY - elem.offset().top;
+                                if (left < 0 || top < 0 || left > $config.width || top > $config.height) {
+                                    /*	If the cursor out of the range, hide the magnifier */
+                                    magnifier.stop(true, true).fadeOut('fast');
+                                    return false;
+                                }
+                                var pos_x = Math.round($pos_x_ratio * left),
+                                        pos_y = Math.round($pos_y_ratio * top);
+                                magnifier.css({
+                                    left: left - $config.magnifier_radius,
+                                    top: top - $config.magnifier_radius,
+                                    backgroundPosition: '-' + pos_x + 'px -' + pos_y + 'px'
+                                });
+                            }).mouseenter(function () {
+                                magnifier.stop(true, true).fadeIn('fast');
+                            });
+                        } else { /* Touchscreen event */
+                            elem[0].addEventListener('touchstart', function (e) {
+                                e.preventDefault();
+                                var left = e.touches[0].pageX - elem.offset().left,
+                                        top = e.touches[0].pageY - elem.offset().top;
+                                var pos_x = Math.round($pos_x_ratio * left),
+                                        pos_y = Math.round($pos_y_ratio * top);
+                                magnifier.css({
+                                    left: left - $config.magnifier_radius,
+                                    top: top - $config.magnifier_radius,
+                                    backgroundPosition: '-' + pos_x + 'px -' + pos_y + 'px'
+                                });
+                                magnifier.stop(true, true).fadeIn('fast');
+                            });
+
+                            elem[0].addEventListener('touchmove', function (e) {
+                                e.preventDefault();
+                                var left = e.touches[0].pageX - elem.offset().left,
+                                        top = e.touches[0].pageY - elem.offset().top;
+                                if (left < 0 || top < 0 || left > $config.width || top > $config.height) {
+                                    /*	If the finger out of the range, hide the magnifier */
+                                    magnifier.stop(true, true).fadeOut('fast');
+                                    return false;
+                                }
+                                var pos_x = Math.round($pos_x_ratio * left),
+                                        pos_y = Math.round($pos_y_ratio * top);
+                                magnifier.css({
+                                    left: left - $config.magnifier_radius,
+                                    top: top - $config.magnifier_radius,
+                                    backgroundPosition: '-' + pos_x + 'px -' + pos_y + 'px'
+                                });
+                            });
+                            elem[0].addEventListener('click', function (e) {
+                                e.preventDefault();
+                            });
+                        }
+                    });
+                };
+            }(window, document, jQuery));
+        </script>
+        <script>
+        //هڈ‚و•°هˆ†هˆ«وک¯magnifier-boxçڑ„ه®½ه’Œé«کï¼Œه¤§ه›¾/ه°ڈه›¾çڑ„و¯”ن¾‹ratio,و”¾ه¤§é•œçڑ„ç›´ه¾„
+        //Workspace's width and height,ratio = larget image size/ small image size
+            $('.workspace').mkMagnifier({width: 300, height: 460, ratio: 1.65, magnifier_radius: 90});
+        </script>
+    </body>
+</html>
